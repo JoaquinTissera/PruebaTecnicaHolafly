@@ -1,5 +1,6 @@
 const db = require('../db');
 const AbstractPeople = require('./abstractPeople')
+const { genericRequest } = require('../swapiFunctions/')
 
 class CommonPeople extends AbstractPeople {
     constructor(id){
@@ -8,9 +9,11 @@ class CommonPeople extends AbstractPeople {
     }
 
     async init(){
-        let people = await this.getPeople()
+        let people = await this.getPeople();
         if(!people){
-            people = {};
+            people = await this.getPeopleSWAIP();
+            console.log(people)
+            console.log(this.id)
         }
 
         this.name = people.name;
@@ -26,6 +29,12 @@ class CommonPeople extends AbstractPeople {
                 id: this.id
             }
         })
+    }
+
+    async getPeopleSWAIP(){
+        const { name, mass, height, homeworld} = await genericRequest(`https://swapi.dev/api/people/${this.id}`, "GET");
+        const { name: homeworld_name} = await genericRequest(homeworld, "GET");
+        return { name, mass, height, homeworld_name, homeworld_id: homeworld.split("/")[5]};
     }
 }
 
