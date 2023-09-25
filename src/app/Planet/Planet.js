@@ -1,10 +1,16 @@
+const db = require('../db');
+const { genericRequest } = require('../swapiFunctions/')
+
 class Planet {
     constructor(id){
-        throw new Error('To be implemented');
+        this.id = id;
     }
 
     async init(){
-        throw new Error('To be implemented');
+        const planet = await this.getPlanet()
+
+        this.name = planet.name;
+        this.gravity = planet.gravity;
     }
 
     getName() {
@@ -14,4 +20,14 @@ class Planet {
     getGravity() {
         return this.gravity;
     }
+
+    async getPlanet() {
+        return await db.swPlanet.findOne({
+            where: { 
+                id: this.id
+            }
+        })
+    }
 }
+
+module.exports = Planet;
