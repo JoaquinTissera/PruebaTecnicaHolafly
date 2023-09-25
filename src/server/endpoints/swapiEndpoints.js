@@ -1,4 +1,4 @@
-
+const { peopleFactory } = require('../../app/People')
 const _isWookieeFormat = (req) => {
     if(req.query.format && req.query.format == 'wookiee'){
         return true;
@@ -15,7 +15,9 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getPeople/:id', async (req, res) => {
-        res.sendStatus(501);
+        const lang = _isWookieeFormat(req) ? "wookiee" : "normal"
+        const people = await peopleFactory(req.params.id, lang)
+        res.json(people, 200);
     });
 
     server.get('/hfswapi/getPlanet/:id', async (req, res) => {
