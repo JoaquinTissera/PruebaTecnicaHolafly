@@ -25,16 +25,24 @@ class Planet {
     }
 
     async getPlanet() {
-        return await db.swPlanet.findOne({
-            where: { 
-                id: this.id
-            }
-        })
+        try{
+            return await db.swPlanet.findOne({
+                where: { 
+                    id: this.id
+                }
+            })
+        } catch (e){
+            return { status: 500, message: "There was an error with the databases"};
+        }
     }
 
     async getPlanetSWAIP(){
-        const { name, gravity } = await genericRequest(`https://swapi.dev/api/planets/${this.id}`, "GET");
-        return { name, gravity: gravity !== "N/A" ? parseFloat(gravity.split(" ")[0]) : 0.0}
+        try {
+            const { name, gravity } = await genericRequest(`https://swapi.dev/api/planets/${this.id}`, "GET");
+            return { name, gravity: gravity !== "N/A" ? parseFloat(gravity.split(" ")[0]) : 0.0}
+        } catch (e) {
+            return { status: 500, message: "There was an error with the databases"};
+        }
     }
 }
 

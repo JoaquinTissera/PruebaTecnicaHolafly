@@ -22,17 +22,25 @@ class CommonPeople extends AbstractPeople {
     }
 
     async getPeople(){
-        return await db.swPeople.findOne({
-            where: { 
-                id: this.id
-            }
-        })
+        try{
+            return await db.swPeople.findOne({
+                where: { 
+                    id: this.id
+                }
+            })
+        } catch (e){
+            return { status: 500, message: "There was an error with the databases"};
+        }
     }
 
     async getPeopleSWAIP(){
-        const { name, mass, height, homeworld} = await genericRequest(`https://swapi.dev/api/people/${this.id}`, "GET");
-        const { name: homeworld_name} = await genericRequest(homeworld, "GET");
-        return { name, mass, height, homeworld_name, homeworld_id: "/planets/" + homeworld.split("/")[5] };
+        try {
+            const { name, mass, height, homeworld} = await genericRequest(`https://swapi.dev/api/people/${this.id}`, "GET");
+            const { name: homeworld_name} = await genericRequest(homeworld, "GET");
+            return { name, mass, height, homeworld_name, homeworld_id: "/planets/" + homeworld.split("/")[5] };
+        } catch (e) {
+            return { status: 500, message: "There was an error with the api SWAPI"};
+        }
     }
 }
 
