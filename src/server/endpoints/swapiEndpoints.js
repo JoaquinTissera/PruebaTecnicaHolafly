@@ -1,4 +1,4 @@
-const { peopleFactory, planetFactory } = require('../../app/')
+const { peopleFactory, planetFactory, getWeightOnPlanet } = require('../../app/')
 const _isWookieeFormat = (req) => {
     if(req.query.format && req.query.format == 'wookiee'){
         return true;
@@ -26,7 +26,8 @@ const applySwapiEndpoints = (server, app) => {
     });
 
     server.get('/hfswapi/getWeightOnPlanetRandom', async (req, res) => {
-        res.sendStatus(501);
+        const weight = { weight: await getWeightOnPlanet(req.query.planetId, req.query.peopleId)}
+        res.status(200).json(weight);
     });
 
     server.get('/hfswapi/getLogs',async (req, res) => {
