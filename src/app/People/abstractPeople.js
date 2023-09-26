@@ -33,10 +33,6 @@ class AbstractPeople {
     getHomeworlId() {
         return this.homeworlId;
     }
-
-    getWeightOnPlanet(planetId){
-        throw new Error('To be implemented');
-    }
 }
 
 module.exports = AbstractPeople
